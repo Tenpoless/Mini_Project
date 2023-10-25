@@ -27,7 +27,16 @@ func Init() *echo.Echo {
 	e.DELETE("/users/:id", controller.Delete)
 
 	//admin routes
-	// e.POST("/admin/login")
+	e.POST("/admin/login", controller.AdminLogin)
+
+	//group routes admin 
+	adminGroup := e.Group("/admin")
+	adminGroup.Use(middleware.(controller.AdminJWTConfig))
+
+	adminGroup.GET("/stok", controller.GetStok)  // Misalnya, mengambil informasi stok darah
+    adminGroup.POST("/stok", controller.CreateStokDarah)  // Menambahkan stok darah baru
+    adminGroup.PUT("/stok/:id", controller.UpdateStokDarah)  // Memperbarui stok darah
+    adminGroup.DELETE("/stok/:id", controller.DeleteStokDarah) 
 
 	return e
 
