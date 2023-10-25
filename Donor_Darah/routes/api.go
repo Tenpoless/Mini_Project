@@ -26,19 +26,16 @@ func Init() *echo.Echo {
 	e.PUT("/users/:id", controller.Update)
 	e.DELETE("/users/:id", controller.Delete)
 
+	
 	//admin routes
 	e.POST("/admin/login", controller.AdminLogin)
-
-	//group routes admin 
-	adminGroup := e.Group("/admin")
-	adminGroup.Use(middleware.(controller.AdminJWTConfig))
-
-	adminGroup.GET("/stok", controller.GetStok)  // Misalnya, mengambil informasi stok darah
-    adminGroup.POST("/stok", controller.CreateStokDarah)  // Menambahkan stok darah baru
-    adminGroup.PUT("/stok/:id", controller.UpdateStokDarah)  // Memperbarui stok darah
-    adminGroup.DELETE("/stok/:id", controller.DeleteStokDarah) 
+	e.GET("/admin/stok", controller.GetStok)  // Mmengambil informasi stok darah
+    e.POST("/admin/stok", controller.CreateStokDarah)  // Menambahkan stok darah baru
+    e.PUT("/admin/stok/:id", controller.UpdateStokDarah)  // Memperbarui stok darah
+    e.DELETE("/admin/stok/:id", controller.DeleteStokDarah) 
+	e.PUT("/admin/daftardonor/:id/status", controller.UpdateStatus)
+	e.GET("/admin/daftardonor/:id/status", controller.GetStatus)
 
 	return e
-
 }
 
