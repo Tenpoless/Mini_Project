@@ -27,3 +27,5 @@ go.work
 # Temporary File
 temp
 tmp
+
+donor_darah.sql
