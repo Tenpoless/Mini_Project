@@ -10,8 +10,8 @@ type Stok struct {
 	CreatedAt 		time.Time
 	UpdatedAt 		time.Time
 	DeletedAt 		gorm.DeletedAt `gorm:"index"`
-	ID_Pusat 		uint `gorm:"foreignKey:PusatID"`
-	ID_GolDarah		uint `gorm:"foreignKey:Gol_DarahID"`
+	ID_Pusat 		uint `gorm:"foreignKey:ID_Pusat"`
+	ID_GolDarah		uint `gorm:"foreignKey:ID_GolDarah"`
 	Jumlah			int64
 	Expired			time.Time
 }

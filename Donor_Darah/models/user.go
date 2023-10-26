@@ -14,7 +14,7 @@ type User struct {
 	Name          string
 	Email         string
 	Password      string
-	ID_GolDarah   uint `gorm:"foreignKey:Gol_DarahID"`
+	ID_GolDarah	  uint `gorm:"foreignKey:ID_GolDarah"`
 	Tanggal_Lahir time.Time
 	Gender        string
 	Alamat        string

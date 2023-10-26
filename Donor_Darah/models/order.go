@@ -10,8 +10,8 @@ type Order struct {
 	CreatedAt 		time.Time
 	UpdatedAt 		time.Time
 	DeletedAt 		gorm.DeletedAt `gorm:"index"`
-	ID_Pusat 		uint `gorm:"foreignKey:PusatID"`
-	ID_User 		uint `gorm:"foreignKey:UserID"`
-	ID_GolDarah 	uint `gorm:"foreignKey:Gol_DarahID"`
+	ID_Pusat 		uint `gorm:"foreignKey:ID_Pusat"`
+	ID_User 		uint `gorm:"foreignKey:ID_User"`
+	ID_GolDarah 	uint `gorm:"foreignKey:ID_GolDarah"`
 	Jumlah 			int32
 }

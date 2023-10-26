@@ -10,7 +10,7 @@ type Jadwal struct {
 	CreatedAt 	time.Time
 	UpdatedAt 	time.Time
 	DeletedAt 	gorm.DeletedAt `gorm:"index"`
-	ID_Pusat	uint `gorm:"foreignKey:PusatID"`
+	ID_Pusat	uint `gorm:"foreignKey:ID_Pusat"`
 	Tanggal		time.Time
 	Kapasitas   int32
 }
