@@ -19,3 +19,7 @@ type User struct {
 	Gender        string
 	Alamat        string
 }
+
+func (u *User) TableName() string {
+    return "User"
+}

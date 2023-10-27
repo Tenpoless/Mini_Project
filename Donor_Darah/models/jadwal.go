@@ -14,3 +14,7 @@ type Jadwal struct {
 	Tanggal		time.Time
 	Kapasitas   int32
 }
+
+func (u *Jadwal) TableName() string {
+    return "Jadwal"
+}

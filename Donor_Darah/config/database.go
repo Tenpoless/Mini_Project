@@ -1,7 +1,6 @@
 package config
 
 import (
-	"app/models"
 	"fmt"
 	"os"
 
@@ -36,11 +35,6 @@ func ConnectDB() {
 		panic("Failed to Connect Database")
 	}
 
-    InitMigrate()
-
 	fmt.Println("Connected to Database")
 }
 
-func InitMigrate() {
-	DB.AutoMigrate(&models.User{})
-}

@@ -15,3 +15,7 @@ type Order struct {
 	ID_GolDarah 	uint `gorm:"foreignKey:ID_GolDarah"`
 	Jumlah 			int32
 }
+
+func (u *Order) TableName() string {
+    return "Order"
+}

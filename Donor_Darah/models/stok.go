@@ -15,3 +15,7 @@ type Stok struct {
 	Jumlah			int64
 	Expired			time.Time
 }
+
+func (u *Stok) TableName() string {
+    return "Stok"
+}

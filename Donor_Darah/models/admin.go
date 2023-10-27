@@ -14,3 +14,7 @@ type Admin struct {
 	Email     string `gorm:"unique" json:"email"`   
 	Password  string 
 }
+
+func (u *Admin) TableName() string {
+    return "Admin"
+}

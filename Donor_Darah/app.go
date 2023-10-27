@@ -13,7 +13,7 @@ func main() {
 
 	e := routes.Init()
 
-	models := []interface{}{
+	modelTypes := []reflect.Type{
 		reflect.TypeOf(models.Admin{}),
 		reflect.TypeOf(models.DaftarDonor{}),
 		reflect.TypeOf(models.Gol_Darah{}),
@@ -24,8 +24,9 @@ func main() {
 		reflect.TypeOf(models.User{}),
 	}
 	
-	for _, m := range models {
-		config.DB.AutoMigrate(m)
+	for _, modelType := range modelTypes {
+		modelPtr := reflect.New(modelType).Interface()
+		config.DB.AutoMigrate(modelPtr)
 	}
 
 	e.Logger.Fatal(e.Start(":8000"))

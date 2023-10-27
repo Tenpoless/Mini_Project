@@ -14,3 +14,7 @@ type Pusat struct {
 	No_telp 		string 
 	Jam_Operasional	time.Time
 }
+
+func (u *Pusat) TableName() string {
+    return "Pusat"
+}

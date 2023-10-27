@@ -12,3 +12,7 @@ type Gol_Darah struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Gol_Darah string
 }
+
+func (u *Gol_Darah) TableName() string {
+    return "Gol_Darah"
+}

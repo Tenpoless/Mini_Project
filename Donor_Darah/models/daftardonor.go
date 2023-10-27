@@ -15,3 +15,7 @@ type DaftarDonor struct {
 	Waktu_Pendaftaran 	time.Time
 	Status              string
 }
+
+func (u *DaftarDonor) TableName() string {
+    return "DaftarDonor"
+}
