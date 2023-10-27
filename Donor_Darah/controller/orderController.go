@@ -4,8 +4,14 @@ import (
 	"app/config"
 	"app/models"
 	"app/utils"
-	"github.com/labstack/echo/v4"
+	"context"
+	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+
+	"github.com/labstack/echo/v4"
+	"github.com/sashabaranov/go-openai"
 )
 
 //memeriksa stok darah
@@ -27,6 +33,28 @@ func PesanDarah(c echo.Context) error {
     if err := c.Bind(&pesanan); err != nil {
         return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid request body"))
     }
+
+	// Meminta rekomendasi golongan darah yang cocok kepada AI
+	client := openai.NewClient(os.Getenv("AI_TOKEN"))
+    resp, err := client.CreateChatCompletion(
+        context.Background(),
+        openai.ChatCompletionRequest{
+            Model: openai.GPT3Dot5Turbo,
+            Messages: []openai.ChatCompletionMessage{
+                {
+                    Role: openai.ChatMessageRoleUser,
+                    Content: strconv.Itoa(int(pesanan.ID_GolDarah)), // Menggunakan golongan darah dari pesanan sebagai pertanyaan
+                },
+            },
+        },
+    )
+
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal menghubungi AI"))
+    }
+
+	// Mengambil jawaban dari AI
+	fmt.Println(resp.Choices[0].Message.Content)
 
 	// Mendapatkan data stok darah berdasarkan golongan darah yang diminta
 	var stok models.Stok
