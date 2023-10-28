@@ -45,6 +45,7 @@ func ComparePassword(hash, password string) error {
 	return nil
 }
 
+
 func NotFoundHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		err := next(c)

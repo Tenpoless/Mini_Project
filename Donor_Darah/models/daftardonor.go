@@ -10,7 +10,7 @@ type DaftarDonor struct {
 	CreatedAt 			time.Time
 	UpdatedAt			time.Time
 	DeletedAt 			gorm.DeletedAt `gorm:"index"`
-	ID_User				uint `gorm:"foreignKey:ID_User"`
+	Name				string
 	ID_Jadwal  			uint `gorm:"foreignKey:ID_Jadwal"`
 	Waktu_Pendaftaran 	time.Time
 	Status              string

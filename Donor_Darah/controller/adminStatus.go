@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"app/models"
 	"app/config"
+	"app/models"
 	"app/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -36,12 +37,15 @@ func UpdateStatus(c echo.Context) error {
 
 // GetStatus memungkinkan admin untuk mengambil status peserta berdasarkan ID
 func GetStatus(c echo.Context) error {
-    // Ambil ID peserta dari URL parameter
-    registrationID := c.Param("id")
+    // Ambil ID stok darah yang akan diperbarui dari parameter URL
+	registID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid register ID"))
+	}
 
     // Ambil status peserta dari basis data berdasarkan ID
     var registration models.DaftarDonor
-    if err := config.DB.Where("id = ?", registrationID).First(&registration).Error; err != nil {
+    if err := config.DB.Where("id = ?", registID).First(&registration).Error; err != nil {
         return c.JSON(http.StatusNotFound, utils.ErrorResponse("Registration not found"))
     }
 

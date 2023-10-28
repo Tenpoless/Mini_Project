@@ -11,12 +11,6 @@ import (
 
 // CreateStokDarah digunakan untuk menambahkan stok darah baru oleh admin
 func CreateStokDarah(c echo.Context) error {
-    // Pastikan hanya admin yang dapat mengakses endpoint ini
-    isAdmin, _ := c.Get("isAdmin").(bool)
-    if !isAdmin {
-        return c.JSON(http.StatusUnauthorized, utils.ErrorResponse("Anda tidak memiliki izin untuk mengakses operasi ini"))
-    }
-
     // Bind request ke objek model StokDarah
     stok := models.Stok{}
     if err := c.Bind(&stok); err != nil {

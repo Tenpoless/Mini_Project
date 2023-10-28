@@ -19,22 +19,34 @@ func Init() *echo.Echo {
 	})
 
 	//user routes
-	e.GET("/users", controller.Index)
-	e.GET("/users/:id", controller.Show)
-	e.POST("/users/register", controller.Store)
-	e.POST("/users/login", controller.Login)
-	e.PUT("/users/:id", controller.Update)
-	e.DELETE("/users/:id", controller.Delete)
+	e.GET("/user", controller.Index)
+	e.GET("/user/:id", controller.Show)
+	e.POST("/user/register", controller.Store)
+	e.POST("/user/login", controller.Login)
+	e.PUT("/user/:id", controller.Update)
+	e.DELETE("/user/:id", controller.Delete)
+	e.POST("/user/registevent", controller.RegistToEvent)
+	e.POST("/user/order", controller.PesanDarah)
 
 	
 	//admin routes
+	adminGroup := e.Group("/admin")
+	adminGroup.Use(middleware.AuthorizationAdmin)
+
+	adminGroup.POST("/createstok", controller.CreateStokDarah)
+	adminGroup.GET("/getstok", controller.GetStok)
+	adminGroup.PUT("/updatestok", controller.UpdateStokDarah)
+	adminGroup.DELETE("/deletestok", controller.DeleteStokDarah)
+	adminGroup.PUT("/daftardonor/:id/updatestatus", controller.UpdateStatus)
+	adminGroup.GET("/daftardonor/:id/getstatus", controller.GetStatus)
+	
 	e.POST("/admin/login", controller.AdminLogin)
-	e.GET("/admin/stok", controller.GetStok)  // Mmengambil informasi stok darah
-    e.POST("/admin/stok", controller.CreateStokDarah)  // Menambahkan stok darah baru
-    e.PUT("/admin/stok/:id", controller.UpdateStokDarah)  // Memperbarui stok darah
-    e.DELETE("/admin/stok/:id", controller.DeleteStokDarah) 
-	e.PUT("/admin/daftardonor/:id/status", controller.UpdateStatus)
-	e.GET("/admin/daftardonor/:id/status", controller.GetStatus)
+	e.GET("/admin/getstok", controller.GetStok)  // Mmengambil informasi stok darah
+    e.POST("/admin/createstok", controller.CreateStokDarah)  // Menambahkan stok darah baru
+    e.PUT("/admin/updatestok/:id", controller.UpdateStokDarah)  // Memperbarui stok darah
+    e.DELETE("/admin/deletestok/:id", controller.DeleteStokDarah) 
+	e.PUT("/admin/daftardonor/:id/updatestatus", controller.UpdateStatus)
+	e.GET("/admin/daftardonor/:id/getstatus", controller.GetStatus)
 
 	return e
 }

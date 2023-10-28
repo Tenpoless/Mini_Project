@@ -69,6 +69,7 @@ func Store(c echo.Context) error {
 
 	//data 
 	userDb.Name = user.Name
+	userDb.Email = user.Email
 	userDb.Tanggal_Lahir = user.Tanggal_Lahir
 	userDb.Gender = user.Gender
 	userDb.Alamat = user.Alamat

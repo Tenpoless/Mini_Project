@@ -6,56 +6,75 @@ import (
 	"app/utils"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
 func RegistToEvent(c echo.Context) error {
-	//ambil ID_User dan ID_Jadwal
-	userID := c.FormValue("ID_User")
-	jadwalID := c.FormValue("ID_Jadwal")
+	// Ambil Nama dan ID_Jadwal dari JSON request
+    nama := c.FormValue("Nama")
+    jadwalIDStr := c.FormValue("ID_Jadwal")
 
-	//periksa jadwal 
-	jadwal := models.Jadwal{}
-	if err := config.DB.Where("ID = ?", jadwalID).First(&jadwal).Error; err != nil {
+    // Konversi ID_Jadwal ke uint
+    jadwalID, err := strconv.ParseUint(jadwalIDStr, 10, 0)
+    if err != nil {
+        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid ID_Jadwal"))
+    }
+
+    // Periksa apakah jadwal dengan ID_Jadwal ada dalam database
+    jadwal := models.Jadwal{}
+    if err := config.DB.Where("id = ?", jadwalID).First(&jadwal).Error; err != nil {
         return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Jadwal donor darah tidak ditemukan"))
     }
 
-	//periksa jadwal penuh
-	if jadwal.Kapasitas <= 0 {
+    // Periksa apakah jadwal penuh
+    if jadwal.Kapasitas <= 0 {
         return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Acara donor darah sudah penuh"))
     }
 
-	//ubah userID ke uint
-	userIDInt, err := strconv.Atoi(userID)
-	if err != nil {
-		// Handle kesalahan konversi, misalnya jika userID bukan angka yang valid
-		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid user ID"))
-	}
-	
-	//ubah jadwalID ke uint
-	jadwalIDInt, err := strconv.Atoi(jadwalID)
-	if err != nil {
-		// Handle kesalahan konversi, misalnya jika jadwalID bukan angka yang valid
-		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid jadwal ID"))
-	}
+    // Simpan pendaftaran
+    registration := models.DaftarDonor{
+        Name:              nama,
+        ID_Jadwal:         uint(jadwalID),
+        Waktu_Pendaftaran: time.Now(),             // Waktu sekarang
+        Status:            "Pendaftaran Berhasil", // Atur status pendaftaran
+    }
 
-	//save pendaftaran
-	registration := models.DaftarDonor{
-		ID_User: uint(userIDInt),
-		ID_Jadwal: uint(jadwalIDInt),
-	}
-
-	if err := config.DB.Create(&registration).Error; err != nil {
+    if err := config.DB.Create(&registration).Error; err != nil {
         return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal mendaftar ke acara donor darah"))
     }
 
-	// Update kapasitas acara donor darah
+    // Perbarui kapasitas acara donor darah
     jadwal.Kapasitas--
 
     if err := config.DB.Save(&jadwal).Error; err != nil {
         return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal memperbarui kapasitas acara donor darah"))
     }
 
-	return c.JSON(http.StatusOK, utils.SuccessResponse("Pendaftaran berhasil", nil))
+    // Kembalikan respons dengan data yang diminta
+    response := struct {
+        ID                uint      `json:"ID"`
+        Name              string    `json:"Name"`
+        ID_Jadwal         uint      `json:"ID_Jadwal"`
+        Waktu_Pendaftaran time.Time `json:"Waktu_Pendaftaran"`
+        Status            string    `json:"Status"`
+    }{
+        ID:                registration.ID,
+        Name:              registration.Name,
+        ID_Jadwal:         registration.ID_Jadwal,
+        Waktu_Pendaftaran: registration.Waktu_Pendaftaran,
+        Status:            registration.Status,
+    }
+
+	// response := web.userRegistResponse{
+	// 	Email:    user.Email,
+	// 	Password: loginRequest.Password,
+	// 	Token:    token,
+	// }
+
+	// return c.JSON(http.StatusOK, utils.SuccessResponse("Login successful", response))
+
+
+    return c.JSON(http.StatusOK, utils.SuccessResponse("Pendaftaran berhasil", response))
 }
