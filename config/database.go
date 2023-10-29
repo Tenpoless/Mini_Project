@@ -7,7 +7,7 @@ import (
 	// "path/filepath"
 
 	// "github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
+	// "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -26,14 +26,14 @@ func ConnectDB() {
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbUser, dbPass, dbHost, dbPort, dbName)
+	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	// 	dbUser, dbPass, dbHost, dbPort, dbName)
 
-	var errDB error
-	DB, errDB = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if errDB != nil {
-		panic("Failed to Connect Database")
-	}
+	// var errDB error
+	// DB, errDB = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	// if errDB != nil {
+	// 	panic("Failed to Connect Database")
+	// }
 
 	fmt.Println("Connected to Database")
 }
