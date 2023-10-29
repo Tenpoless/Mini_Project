@@ -5,20 +5,27 @@ import (
 	"app/models"
 	"app/utils"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
 func UpdateStatus(c echo.Context) error {
-    // Ambil ID peserta dari URL parameter
-    registrationID := c.Param("id")
-
-    // Ambil data status yang dikirim oleh admin dalam request body
-    var statusUpdate models.DaftarDonor
-    if err := c.Bind(&statusUpdate); err != nil {
-        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid request body"))
+    // Buat sebuah struktur untuk membaca input JSON
+    type Input struct {
+        ID int `json:"id"`
+        Status string `json:"status"`
     }
+
+    // Inisialisasi variabel untuk menyimpan input JSON
+    var input Input
+
+    // Bind input JSON ke variabel "input"
+    if err := c.Bind(&input); err != nil {
+        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid JSON input"))
+    }
+
+    // Sekarang Anda bisa menggunakan "input.ID" untuk mendapatkan ID dari input JSON
+    registrationID := input.ID
 
     // Perbarui status peserta di basis data
     var registration models.DaftarDonor
@@ -26,7 +33,7 @@ func UpdateStatus(c echo.Context) error {
         return c.JSON(http.StatusNotFound, utils.ErrorResponse("Registration not found"))
     }
 
-    registration.Status = statusUpdate.Status
+    registration.Status = input.Status
     if err := config.DB.Save(&registration).Error; err != nil {
         return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Failed to update registration status"))
     }
@@ -37,11 +44,21 @@ func UpdateStatus(c echo.Context) error {
 
 // GetStatus memungkinkan admin untuk mengambil status peserta berdasarkan ID
 func GetStatus(c echo.Context) error {
-    // Ambil ID stok darah yang akan diperbarui dari parameter URL
-	registID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid register ID"))
-	}
+    // Buat sebuah struktur untuk membaca input JSON
+    type Input struct {
+        ID int `json:"id"`
+    }
+
+    // Inisialisasi variabel untuk menyimpan input JSON
+    var input Input
+
+    // Bind input JSON ke variabel "input"
+    if err := c.Bind(&input); err != nil {
+        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid JSON input"))
+    }
+
+    // Sekarang Anda bisa menggunakan "input.ID" untuk mendapatkan ID dari input JSON
+    registID := input.ID
 
     // Ambil status peserta dari basis data berdasarkan ID
     var registration models.DaftarDonor

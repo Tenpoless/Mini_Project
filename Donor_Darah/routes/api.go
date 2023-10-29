@@ -19,12 +19,8 @@ func Init() *echo.Echo {
 	})
 
 	//user routes
-	e.GET("/user", controller.Index)
-	e.GET("/user/:id", controller.Show)
 	e.POST("/user/register", controller.Store)
 	e.POST("/user/login", controller.Login)
-	e.PUT("/user/:id", controller.Update)
-	e.DELETE("/user/:id", controller.Delete)
 	e.POST("/user/registevent", controller.RegistToEvent)
 	e.POST("/user/:id/order", controller.PesanDarah)
 	e.POST("/user/bloodrecommendation", controller.RecommendationAI)
@@ -37,16 +33,19 @@ func Init() *echo.Echo {
 	adminGroup.GET("/getstok", controller.GetStok)
 	adminGroup.PUT("/updatestok", controller.UpdateStokDarah)
 	adminGroup.DELETE("/deletestok", controller.DeleteStokDarah)
-	adminGroup.PUT("/daftardonor/:id/updatestatus", controller.UpdateStatus)
-	adminGroup.GET("/daftardonor/:id/getstatus", controller.GetStatus)
+	adminGroup.PUT("/daftardonor/updatestatus", controller.UpdateStatus)
+	adminGroup.GET("/daftardonor/getstatus", controller.GetStatus)
 
 	e.POST("/admin/login", controller.AdminLogin)
+	e.GET("/admin", controller.Index)
+	e.GET("/admin/:id", controller.Show)
+	e.DELETE("/admin/delete/:id", controller.Delete)
 	e.GET("/admin/getstok", controller.GetStok)                // Mmengambil informasi stok darah
 	e.POST("/admin/createstok", controller.CreateStokDarah)    // Menambahkan stok darah baru
 	e.PUT("/admin/updatestok/:id", controller.UpdateStokDarah) // Memperbarui stok darah
 	e.DELETE("/admin/deletestok/:id", controller.DeleteStokDarah)
-	e.PUT("/admin/daftardonor/:id/updatestatus", controller.UpdateStatus)
-	e.GET("/admin/daftardonor/:id/getstatus", controller.GetStatus)
+	e.PUT("/admin/daftardonor/updatestatus", controller.UpdateStatus)
+	e.GET("/admin/daftardonor/getstatus", controller.GetStatus)
 
 	return e
 }

@@ -12,69 +12,66 @@ import (
 )
 
 func RegistToEvent(c echo.Context) error {
-	// Ambil Nama dan ID_Jadwal dari JSON request
-    nama := c.FormValue("Nama")
-    jadwalIDStr := c.FormValue("ID_Jadwal")
+	name := c.FormValue("Nama")
+	jadwalIDStr := c.FormValue("ID_Jadwal")
+	jadwalID, err := strconv.ParseUint(jadwalIDStr, 10, 0)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid jadwal ID"))
+	}
 
-    // Konversi ID_Jadwal ke uint
-    jadwalID, err := strconv.ParseUint(jadwalIDStr, 10, 0)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid ID_Jadwal"))
-    }
+	// Validasi input
+	if name == "" || jadwalIDStr == "" {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Harap isi semua field yang diperlukan"))
+	}
 
-    // Periksa apakah jadwal dengan ID_Jadwal ada dalam database
-    jadwal := models.Jadwal{}
-    if err := config.DB.Where("id = ?", jadwalID).First(&jadwal).Error; err != nil {
-        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Jadwal donor darah tidak ditemukan"))
-    }
+	// Bind request ke objek model StokDarah
+	registration := models.DaftarDonor{}
+	if err := c.Bind(&registration); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Invalid request body"))
+	}
 
-    // Periksa apakah jadwal penuh
-    if jadwal.Kapasitas <= 0 {
-        return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Acara donor darah sudah penuh"))
-    }
+	// Periksa apakah jadwal dengan ID_Jadwal ada dalam database
+	jadwal := models.Jadwal{}
+	if err := config.DB.Where("id = ?", jadwalID).First(&jadwal).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Jadwal donor darah tidak ditemukan"))
+	}
 
-    // Simpan pendaftaran
-    registration := models.DaftarDonor{
-        Name:              nama,
-        ID_Jadwal:         uint(jadwalID),
-        Waktu_Pendaftaran: time.Now(),             // Waktu sekarang
-        Status:            "Pendaftaran Berhasil", // Atur status pendaftaran
-    }
+	// Periksa apakah jadwal penuh
+	if jadwal.Kapasitas <= 0 {
+		return c.JSON(http.StatusBadRequest, utils.ErrorResponse("Acara donor darah sudah penuh"))
+	}
 
-    if err := config.DB.Create(&registration).Error; err != nil {
-        return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal mendaftar ke acara donor darah"))
-    }
+	// Simpan pendaftaran
+    registration.Name = name
+	registration.ID_Jadwal = uint(jadwalID)
+	registration.Waktu_Pendaftaran = time.Now()
+	registration.Status = "Pendaftaran Berhasil"
 
-    // Perbarui kapasitas acara donor darah
-    jadwal.Kapasitas--
+	if err := config.DB.Create(&registration).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal mendaftar ke acara donor darah"))
+	}
 
-    if err := config.DB.Save(&jadwal).Error; err != nil {
-        return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal memperbarui kapasitas acara donor darah"))
-    }
+	// Perbarui kapasitas acara donor darah
+	jadwal.Kapasitas--
 
-    // Kembalikan respons dengan data yang diminta
-    response := struct {
-        ID                uint      `json:"ID"`
-        Name              string    `json:"Name"`
-        ID_Jadwal         uint      `json:"ID_Jadwal"`
-        Waktu_Pendaftaran time.Time `json:"Waktu_Pendaftaran"`
-        Status            string    `json:"Status"`
-    }{
-        ID:                registration.ID,
-        Name:              registration.Name,
-        ID_Jadwal:         registration.ID_Jadwal,
-        Waktu_Pendaftaran: registration.Waktu_Pendaftaran,
-        Status:            registration.Status,
-    }
+	if err := config.DB.Save(&jadwal).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal memperbarui kapasitas acara donor darah"))
+	}
 
-	// response := web.userRegistResponse{
-	// 	Email:    user.Email,
-	// 	Password: loginRequest.Password,
-	// 	Token:    token,
-	// }
+	// Kembalikan respons dengan data yang diminta
+	response := struct {
+		ID                uint      `json:"ID"`
+		Name              string    `json:"Nama"`
+		ID_Jadwal         uint      `json:"ID_Jadwal"`
+		Waktu_Pendaftaran time.Time `json:"Waktu_Pendaftaran"`
+		Status            string    `json:"Status"`
+	}{
+		ID:                registration.ID,
+		Name:              registration.Name,
+		ID_Jadwal:         registration.ID_Jadwal,
+		Waktu_Pendaftaran: registration.Waktu_Pendaftaran,
+		Status:            registration.Status,
+	}
 
-	// return c.JSON(http.StatusOK, utils.SuccessResponse("Login successful", response))
-
-
-    return c.JSON(http.StatusOK, utils.SuccessResponse("Pendaftaran berhasil", response))
+	return c.JSON(http.StatusOK, utils.SuccessResponse("Pendaftaran berhasil", response))
 }
