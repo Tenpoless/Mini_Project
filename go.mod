@@ -8,8 +8,8 @@ require (
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/sashabaranov/go-openai v1.16.0
 	golang.org/x/crypto v0.11.0
-	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.4
+	gorm.io/driver/mysql v1.5.2
+	gorm.io/gorm v1.25.5
 )
 
 require (
