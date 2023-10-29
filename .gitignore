@@ -22,7 +22,7 @@
 go.work
 
 # Environment Variable
-.env
+# .env
 
 # Temporary File
 temp
