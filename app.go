@@ -3,6 +3,7 @@ package main
 import (
 	"app/config"
 	"app/routes"
+	"log"
 )
 
 func main() {
@@ -10,5 +11,7 @@ func main() {
 
 	e := routes.Init()
 
-	e.Logger.Fatal(e.Start("0.0.0.0: +8080"))
+	if err := e.Start("0.0.0.0:8080"); err != nil {
+		log.Fatalf("Gagal memulai server: %v", err)
+	}
 }
