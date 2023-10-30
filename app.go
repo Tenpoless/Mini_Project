@@ -4,6 +4,7 @@ import (
 	"app/config"
 	"app/routes"
 	"log"
+	"os"
 )
 
 func main() {
@@ -11,7 +12,11 @@ func main() {
 
 	e := routes.Init()
 
-	if err := e.Start("0.0.0.0:8080"); err != nil {
+	port := "8080"
+
+	os.Getenv("PORT")
+
+	if err := e.Start("0.0.0.0:" +port); err != nil {
 		log.Fatalf("Gagal memulai server: %v", err)
 	}
 }
