@@ -12,11 +12,11 @@ func main() {
 
 	e := routes.Init()
 
-	// port := "3000"
+	port := ":8000"
 
 	os.Getenv("PORT")
 
-	if err := e.Start(":8000"); err != nil {
+	if err := e.Start(port); err != nil {
 		log.Fatalf("Gagal memulai server: %v", err)
 	}
 }
