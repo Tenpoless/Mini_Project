@@ -14,7 +14,7 @@ func main() {
 
 	port := "8080"
 
-	os.Getenv("PORT")
+	os.Getenv("DB_PORT")
 
 	if err := e.Start("0.0.0.0:" +port); err != nil {
 		log.Fatalf("Gagal memulai server: %v", err)
