@@ -12,7 +12,7 @@ func main() {
 
 	e := routes.Init()
 
-	port := "8080"
+	port := "3306"
 
 	os.Getenv("DB_PORT")
 
