@@ -12,7 +12,7 @@ func main() {
 
 	e := routes.Init()
 
-	port := "3306"
+	port := "3000"
 
 	os.Getenv("PORT")
 

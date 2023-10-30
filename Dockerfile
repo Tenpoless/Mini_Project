@@ -7,5 +7,5 @@ RUN go build app.go
 FROM alpine:3.18
 WORKDIR /root/
 COPY --from=builder /app/app .
-EXPOSE 3306
+EXPOSE 3000
 CMD [ "./app" ] 
