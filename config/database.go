@@ -1,12 +1,9 @@
 package config
 
 import (
+	"app/models"
 	"fmt"
-	"os"
 
-	"path/filepath"
-
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -14,27 +11,32 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	err := godotenv.Load(filepath.Join(".", ".env"))
-	if err != nil {
-		fmt.Println("Error loading .env file")
-		os.Exit(1)
-	}
+	username := "donor_darah"
+	password := "B1common"
+	host := "db4free.net"
+	port := "3306"
+	name := "donor_darah"
 
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbUser, dbPass, dbHost, dbPort, dbName)
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		username,
+		password,
+		host,
+		port,
+		name,
+	)
 
 	var errDB error
-	DB, errDB = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, errDB = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if errDB != nil {
 		panic("Failed to Connect Database")
 	}
 
 	fmt.Println("Connected to Database")
 }
+
+func AutoMigrate() {
+    DB.AutoMigrate(&models.User{}, &models.Admin{}, &models.DaftarDonor{},
+	&models.Gol_Darah{}, &models.Jadwal{}, &models.Order{}, &models.Pusat{}, &models.Stok{})
+}
+
 

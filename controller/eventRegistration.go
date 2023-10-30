@@ -52,11 +52,11 @@ func RegistToEvent(c echo.Context) error {
 	}
 
 	// Perbarui kapasitas acara donor darah
-	jadwal.Kapasitas--
+	// jadwal.Kapasitas--
 
-	if err := config.DB.Save(&jadwal).Error; err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal memperbarui kapasitas acara donor darah"))
-	}
+	// if err := config.DB.Save(&jadwal).Error; err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, utils.ErrorResponse("Gagal memperbarui kapasitas acara donor darah"))
+	// }
 
 	// Kembalikan respons dengan data yang diminta
 	response := struct {

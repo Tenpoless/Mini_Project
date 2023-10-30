@@ -22,7 +22,7 @@ func Init() *echo.Echo {
 	e.POST("/user/register", controller.Store)
 	e.POST("/user/login", controller.Login)
 	e.POST("/user/registevent", controller.RegistToEvent)
-	e.POST("/user/:id/order", controller.PesanDarah)
+	e.POST("/user/order", controller.PesanDarah)
 	e.POST("/user/bloodrecommendation", controller.RecommendationAI)
 
 	//admin routes
