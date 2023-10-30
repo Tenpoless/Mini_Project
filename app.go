@@ -3,6 +3,7 @@ package main
 import (
 	"app/config"
 	"app/routes"
+	"log"
 	"os"
 )
 
@@ -11,7 +12,11 @@ func main() {
 
 	e := routes.Init()
 
+	port := ":3306"
+
 	os.Getenv("PORT")
 
-	e.Logger.Fatal(e.Start(":8000"))
+	if err := e.Start(port); err != nil {
+		log.Fatalf("Gagal memulai server: %v", err)
+	}
 }
