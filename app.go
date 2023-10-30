@@ -12,7 +12,9 @@ func main() {
 
 	e := routes.Init()
 
+	port := "8000"
+
 	os.Getenv("PORT")
 
-	e.Logger.Fatal(e.Start(":8000"))
+	e.Logger.Fatal(e.Start(":" +port))
 }
